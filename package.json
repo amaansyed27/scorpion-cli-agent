@@ -1,0 +1,37 @@
+{
+    "name": "scorpion-cli",
+    "version": "1.0.0",
+    "description": "Agentic AI CLI assistant powered by Ollama",
+    "type": "module",
+    "main": "src/index.js",
+    "bin": {
+        "scorpion": "./src/index.js"
+    },
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "node --watch src/index.js"
+    },
+    "keywords": [
+        "ai",
+        "cli",
+        "ollama",
+        "agent",
+        "assistant"
+    ],
+    "author": "Amaan",
+    "license": "MIT",
+    "dependencies": {
+        "boxen": "^8.0.1",
+        "chalk": "^5.3.0",
+        "cheerio": "^1.1.2",
+        "commander": "^12.1.0",
+        "figlet": "^1.8.0",
+        "gradient-string": "^3.0.0",
+        "inquirer": "^12.3.0",
+        "markdown-pdf": "^11.0.0",
+        "node-fetch": "^3.3.2",
+        "ollama": "^0.5.12",
+        "ora": "^8.1.1",
+        "systeminformation": "^5.23.5"
+    }
+}
