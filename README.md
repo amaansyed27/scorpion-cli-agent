@@ -1,8 +1,8 @@
 # Scorpion CLI 🦂
 
-An end-to-end **agentic AI assistant** for your terminal, powered by [Ollama](https://ollama.com) and **qwen3:8b**.
+An end-to-end **agentic AI assistant** for your terminal, refined for **speed**, **aesthetics**, and **intelligence**.
 
-Just type what you want in plain English - Scorpion figures out how to do it.
+Powered by [Ollama](https://ollama.com) and **qwen3:8b**, Scorpion doesn't just chat—it takes action, manages your system, and researches the web for you.
 
 ```
   ███████╗ ██████╗ ██████╗ ██████╗ ██████╗ ██╗ ██████╗ ███╗   ██╗
@@ -13,19 +13,26 @@ Just type what you want in plain English - Scorpion figures out how to do it.
   ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 ```
 
+## ✨ New Features
+
+- **🧠 Smart Agent Core**: Automatically detects when it needs to search the web for up-to-date info vs. using internal knowledge.
+- **🎨 Refined UI/UX**: Beautiful ASCII tables, interactive spinners, and structured markdown output.
+- **⚡ Proactive & Dynamic**: The system prompt now adapts to the current date/time and enforces strict formatting rules for clarity.
+
 ## What It Can Do
 
-- 🔧 **Run commands** - Execute PowerShell, manage processes
-- 📁 **Manage files** - Create, read, write, search files
-- 📊 **Analyze system** - CPU, memory, disk usage, performance reports
-- 🌐 **Research topics** - Search the web, fetch pages, synthesize info
-- 📝 **Create documents** - Reports, summaries, formatted output
+- 🌐 **Smart Web Research** - "Search for the latest AI news" (Auto-searches if knowledge is outdated)
+- 🔧 **System Control** - Execute PowerShell commands, manage processes, check logs
+- 📁 **File Operations** - Create, read, edit, and analyze files with ease
+- 📊 **System Analysis** - Visual performance reports (CPU, RAM, Disk)
+- 📝 **Structured Reports** - Generates clean, formatted summaries and documents
 
 ## Requirements
 
 - Node.js 18+
 - [Ollama](https://ollama.com/download) running locally
 - qwen3:8b model: `ollama pull qwen3:8b`
+- *(Optional)* Ollama API Key for Web Search capabilities
 
 ## Quick Start
 
@@ -35,81 +42,73 @@ npm install
 npm start
 ```
 
-## Usage
+## Usage Examples
 
-Just type naturally:
-
+**1. System Analysis (Formatted Tables)**
 ```
   > show my system performance
 
   ◆ Checking CPU usage...
   ◆ Checking memory usage...
-  ◆ Checking disk usage...
 
-  Your system is running well:
-  - CPU: 23% usage (8 cores)
-  - Memory: 12.4 GB / 32 GB (39%)
-  - Disk C: 234 GB free / 512 GB
+  ┌───────────────┬────────────────────────────────────────┐
+  │ Metric        │ Value                                  │
+  ├───────────────┼────────────────────────────────────────┤
+  │ CPU Usage     │ 23% (8 cores)                          │
+  │ Memory        │ 12.4 GB / 32 GB (39%)                  │
+  │ Disk (C:)     │ 234 GB free / 512 GB                   │
+  └───────────────┴────────────────────────────────────────┘
 ```
 
+**2. Smart Web Search**
 ```
-  > create a file called notes.txt with today's meeting notes
+  > what happened in the tech world yesterday?
 
-  ◆ Creating file: notes.txt
+  ◆ Searching the web for: "tech news yesterday [current-date]"
+  ◆ Reading: techcrunch.com...
+  ◆ Reading: theverge.com...
 
-  Done! Created notes.txt with your meeting notes template.
-```
+  ## Tech News Roundup
+  > Key Insight: Major breakthroughs in AI agents and new hardware releases defined the news cycle.
 
-```
-  > search for the latest news about AI coding assistants
-
-  ◆ Searching the web for: "latest AI coding assistants news"
-  ◆ Fetching: techcrunch.com/ai-coding-tools...
-
-  Here's what I found about AI coding assistants...
+  - **Company X** released a new open-source model...
+  - **Product Y** was announced with...
 ```
 
-## Commands
+**3. File Creation**
+```
+  > create a python script that calculates fibonacci
 
-| Command | Description |
-|---------|-------------|
-| `exit` | Quit Scorpion |
-| `clear` | Clear conversation history |
+  ◆ Generating code...
+  ◆ Writing to file: fib.py
+
+  Done! Created fib.py
+```
+
+## Configuration
+
+**Web Search Setup**
+To enable the agent's ability to search the live web, set your Ollama API key:
+
+```powershell
+$env:OLLAMA_API_KEY = "your-key-here"
+npm start
+```
 
 ## CLI Options
 
 ```bash
-# Interactive mode (default)
-npm start
-
-# Single query
-node src/index.js --query "show disk usage"
-
-# Show AI thinking process
-node src/index.js --think
-
-# Use different model
-node src/index.js --model qwen3:32b
-
-# Check connection
-node src/index.js --check
-```
-
-## Web Search
-
-For web search, get an API key from [ollama.com/settings/keys](https://ollama.com/settings/keys):
-
-```powershell
-$env:OLLAMA_API_KEY = "your-key"
-npm start
+npm start                    # Interactive mode
+node src/index.js --think    # Show the AI's hidden thought process
+node src/index.js --check    # Check connection and model status
 ```
 
 ## Built With
 
-- **Ollama** - Local AI inference
-- **qwen3:8b** - Excellent tool-calling model with thinking mode
-- **Node.js** - Runtime
-- **chalk/gradient-string** - Beautiful terminal output
+- **Ollama** - Local AI inference & Tool Calling
+- **qwen3:8b** - Powerful small-model logic
+- **Node.js** - Runtime & System Interaction
+- **ora/chalk** - Terminal styling & Animations
 
 ## License
 
