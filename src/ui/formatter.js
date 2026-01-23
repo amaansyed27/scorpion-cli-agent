@@ -21,6 +21,7 @@ const colors = {
     muted: chalk.hex('#636e72'),
     white: chalk.white,
     bold: chalk.bold,
+    cyan: chalk.cyan,
 };
 
 /**
