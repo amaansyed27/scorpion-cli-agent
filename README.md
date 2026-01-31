@@ -85,6 +85,30 @@ npm start
   Done! Created fib.py
 ```
 
+## 🎯 Interactive Commands
+
+Inside the CLI, you can use special triggers to control the agent:
+
+### **Power Triggers**
+
+- **`@deep <query>`** (or **`@deepresearch`**)
+  *Triggers Deep Research Mode: searches arXiv, Wikipedia, & web for comprehensive reports.*
+  
+- **`@quick <query>`** (or **`@fast`**)
+  *Forces a quick response without searching the web.*
+
+> **Note:** Scorpion automatically enables Deep Research if you ask to "research", "analyze", or "explain in detail".
+
+### **Utilities**
+
+- `help` / `?` : Show help menu
+- `demo` : Run a UI features demo
+- `stats` : Show session statistics
+- `reports` : List saved reports
+- `export md` : Export last output to Markdown
+- `clear` : Reset conversation
+- `exit` : Quit
+
 ## Configuration
 
 **Web Search Setup**
