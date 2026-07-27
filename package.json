@@ -1,7 +1,7 @@
 {
     "name": "scorpion-cli",
-    "version": "0.1.2",
-    "description": "Agentic AI CLI assistant powered by Ollama",
+    "version": "0.1.3",
+    "description": "Local AI agent CLI powered by Ollama with interactive model selection, web research, and system tools.",
     "type": "module",
     "main": "src/index.js",
     "bin": {
@@ -10,6 +10,8 @@
     },
     "files": [
         "src",
+        "docs/installation.md",
+        "docs/model-selection.md",
         "README.md",
         "install.ps1",
         "install.sh"
@@ -20,13 +22,27 @@
     },
     "keywords": [
         "ai",
+        "ai-agent",
         "cli",
+        "command-line",
+        "deep-research",
+        "llm",
+        "local-ai",
+        "model-selection",
+        "nodejs",
         "ollama",
-        "agent",
-        "assistant"
+        "terminal"
     ],
     "author": "Amaan",
     "license": "MIT",
+    "homepage": "https://github.com/amaansyed27/scorpion-cli-agent#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/amaansyed27/scorpion-cli-agent.git"
+    },
+    "bugs": {
+        "url": "https://github.com/amaansyed27/scorpion-cli-agent/issues"
+    },
     "engines": {
         "node": ">=22.12.0"
     },

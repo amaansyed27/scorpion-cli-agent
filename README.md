@@ -22,6 +22,13 @@ Powered by [Ollama](https://ollama.com) and **qwen3.5:0.8b**, Scorpion doesn't j
 - **🎨 Beautiful UI**: Rich ASCII tables, interactive spinners, live progress updates, and structured markdown rendering.
 - **🔧 System Control**: Execute commands, manage files, check system performance (CPU/RAM), and write code directly to files.
 
+[![npm version](https://img.shields.io/npm/v/scorpion-cli?logo=npm)](https://www.npmjs.com/package/scorpion-cli)
+[![GitHub release](https://img.shields.io/github/v/release/amaansyed27/scorpion-cli-agent)](https://github.com/amaansyed27/scorpion-cli-agent/releases)
+
+Scorpion is a local AI agent CLI for Windows, macOS, and Linux. Powered by [Ollama](https://ollama.com), it provides interactive local model selection, web research, file and system tools, and persistent session settings without requiring a paid AI API.
+
+Use Scorpion from any terminal to chat with locally available Ollama models, run deep research, inspect your system, and work with files.
+
 ## What It Can Do
 
 - **"Research the latest developments in quantum computing"** (Triggers Deep Research)
@@ -55,34 +62,39 @@ Powered by [Ollama](https://ollama.com) and **qwen3.5:0.8b**, Scorpion doesn't j
 
 ### Install from npm
 
-After the `0.1.0` release, Scorpion can be installed on Windows, macOS, and Linux:
+Scorpion can be installed on Windows, macOS, and Linux:
 
 ```bash
 # Global npm install
-npm install --global scorpion-cli@0.1.2
+npm install --global scorpion-cli@0.1.3
 scorpion
 
 # Run without installing globally
-npx scorpion-cli@0.1.2
+npx scorpion-cli@0.1.3
 ```
 
 PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.2/install.ps1 | iex
+irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.3/install.ps1 | iex
 scorpion
 ```
 
 macOS/Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.2/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.3/install.sh | sh
 scorpion
 ```
 
 The current `https://aish.dawnlightlabs.com/install.ps1` endpoint belongs to AiSH and should not be used for Scorpion. Configure a separate Scorpion subdomain, such as `https://scorpion.dawnlightlabs.com/install.ps1`, to serve these installer files if you want a branded short URL.
 
 Scorpion is distributed as one Node.js package rather than separate native binaries, so the same release works across all three platforms. Ollama must still be installed and running locally.
+
+## Documentation
+
+- [Installation and updates](docs/installation.md)
+- [Model selection and persistent settings](docs/model-selection.md)
 
 ## 🎯 Usage & Power Commands
 
