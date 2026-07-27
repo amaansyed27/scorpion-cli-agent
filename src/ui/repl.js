@@ -7,7 +7,7 @@ import readline from 'readline';
 import { runAgent } from '../agent.js';
 import { isModelAvailable, DEFAULT_MODEL } from '../ollama.js';
 import { setProgressCallback } from '../tools/deep-research.js';
-import { handleStats, handleListReports, handleDemo } from '../commands.js';
+import { handleStats, handleListReports, handleDemo, handleExport, handleListModels, handleModelSelect } from '../commands.js';
 import {
     displayBanner,
     showToolExecution,
@@ -35,16 +35,18 @@ export async function startREPL(options = {}) {
         showThinkingOutput = false,  // Hidden by default like Claude Code
     } = options;
 
+    const settings = { model, showThinkingOutput };
+
     // Display welcome banner
     displayBanner();
 
     // Check Ollama connection
     try {
-        const available = await isModelAvailable(model);
+        const available = await isModelAvailable(settings.model);
         if (!available) {
-            showError(`Model '${model}' not found. Run: ollama pull ${model}`);
+            showError(`Model '${settings.model}' not found. Run: ollama pull ${settings.model}`);
         } else {
-            showSuccess(`Connected to ${model}`);
+            showSuccess(`Connected to ${settings.model}`);
         }
     } catch (error) {
         showError('Could not connect to Ollama. Make sure it is running.');
@@ -64,10 +66,13 @@ export async function startREPL(options = {}) {
 
     // Conversation history
     let history = [];
+    let isClosing = false;
 
     // Main loop
     const prompt = () => {
+        if (isClosing || rl.closed) return;
         rl.question(getPrompt(), async (input) => {
+            if (isClosing || rl.closed) return;
             const trimmedInput = input.trim();
 
             // Handle empty input
@@ -78,11 +83,25 @@ export async function startREPL(options = {}) {
 
             // Handle exit
             if (trimmedInput.toLowerCase() === 'exit' || trimmedInput.toLowerCase() === 'quit') {
+                isClosing = true;
                 console.log();
                 showInfo('Goodbye! 👋');
                 console.log();
                 rl.close();
                 process.exit(0);
+            }
+
+            // Handle slash commands and retain the older bare command aliases.
+            const command = parseCommand(trimmedInput);
+            if (command) {
+                const shouldContinue = await handleCommand(command, settings, () => {
+                    history = [];
+                });
+                if (shouldContinue && !isClosing && !rl.closed) {
+                    prompt();
+                    return;
+                }
+                if (isClosing || rl.closed) return;
             }
 
             // Show help
@@ -132,13 +151,88 @@ export async function startREPL(options = {}) {
             }
 
             // Process with agent
-            await processInput(trimmedInput, history, { model, showThinkingOutput });
+            await processInput(trimmedInput, history, settings);
 
             prompt();
         });
     };
 
     prompt();
+}
+
+function parseCommand(input) {
+    if (!input.startsWith('/')) return null;
+    const [name, ...args] = input.slice(1).trim().split(/\s+/);
+    return name ? { name: name.toLowerCase(), args } : { name: 'help', args: [] };
+}
+
+async function handleCommand(command, settings, clearHistory) {
+    const arg = command.args[0]?.toLowerCase();
+
+    switch (command.name) {
+        case 'help':
+        case '?':
+            showHelp();
+            return true;
+        case 'list':
+        case 'models':
+            await handleListModels(settings.model);
+            return true;
+        case 'model': {
+            const selected = command.args.join(' ') || await handleModelSelect(settings.model);
+            if (selected) {
+                settings.model = selected;
+                showSuccess(`Model changed to ${settings.model}`);
+            }
+            return true;
+        }
+        case 'settings':
+            showSettings(settings);
+            return true;
+        case 'think':
+            if (!['on', 'off', 'toggle'].includes(arg)) {
+                showInfo('Usage: /think on | /think off | /think toggle');
+            } else {
+                settings.showThinkingOutput = arg === 'toggle' ? !settings.showThinkingOutput : arg === 'on';
+                showSuccess(`Thinking output ${settings.showThinkingOutput ? 'enabled' : 'disabled'}`);
+            }
+            return true;
+        case 'clear':
+            clearHistory();
+            displayBanner();
+            showSuccess('Conversation cleared');
+            showWelcomeCode();
+            return true;
+        case 'stats':
+            await handleStats();
+            return true;
+        case 'reports':
+            await handleListReports();
+            return true;
+        case 'demo':
+            await handleDemo();
+            return true;
+        case 'export':
+            await handleExport(command.args[0] || 'md');
+            return true;
+        case 'exit':
+        case 'quit':
+            showInfo('Goodbye! 👋');
+            process.exit(0);
+        default:
+            showError(`Unknown command '/${command.name}'. Type /help for available commands.`);
+            return true;
+    }
+}
+
+function showSettings(settings) {
+    console.log();
+    console.log(colors.bold.white('  Current Settings'));
+    console.log(colors.dim('  ' + '─'.repeat(30)));
+    console.log(`  Model: ${colors.accent(settings.model)}`);
+    console.log(`  Thinking output: ${colors.accent(settings.showThinkingOutput ? 'on' : 'off')}`);
+    console.log(`  Ollama host: ${colors.dim(process.env.OLLAMA_HOST || 'http://localhost:11434')}`);
+    console.log();
 }
 
 /**
@@ -162,13 +256,17 @@ function showHelp() {
     console.log();
 
     console.log(colors.accent('  Utility Commands:'));
-    console.log(colors.dim('    help, ?') + colors.white(' - Show this help message'));
-    console.log(colors.dim('    demo   ') + colors.white(' - See all UI features (tables, charts)'));
-    console.log(colors.dim('    stats  ') + colors.white(' - Show session statistics'));
-    console.log(colors.dim('    reports') + colors.white(' - List saved research reports'));
-    console.log(colors.dim('    export ') + colors.white(' [md|json] - Export last report'));
-    console.log(colors.dim('    clear  ') + colors.white(' - Clear conversation history'));
-    console.log(colors.dim('    exit   ') + colors.white(' - Quit Scorpion'));
+    console.log(colors.dim('    /help, /?') + colors.white(' - Show this help message'));
+    console.log(colors.dim('    /list    ') + colors.white(' - List installed Ollama models'));
+    console.log(colors.dim('    /model   ') + colors.white(' [name] - Select or switch model'));
+    console.log(colors.dim('    /settings') + colors.white(' - Show current settings'));
+    console.log(colors.dim('    /think   ') + colors.white(' on|off|toggle - Toggle thinking output'));
+    console.log(colors.dim('    /demo    ') + colors.white(' - See all UI features (tables, charts)'));
+    console.log(colors.dim('    /stats   ') + colors.white(' - Show session statistics'));
+    console.log(colors.dim('    /reports ') + colors.white(' - List saved research reports'));
+    console.log(colors.dim('    /export  ') + colors.white(' [md|json] - Export last report'));
+    console.log(colors.dim('    /clear   ') + colors.white(' - Clear conversation history'));
+    console.log(colors.dim('    /exit    ') + colors.white(' - Quit Scorpion'));
     console.log();
 
     console.log(colors.accent('  Auto-Detection:'));
@@ -376,4 +474,4 @@ async function processInput(input, history, options = {}) {
     }
 }
 
-export { processInput };
+export { processInput, parseCommand };

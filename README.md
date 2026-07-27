@@ -2,7 +2,7 @@
 
 An end-to-end **agentic AI assistant** for your terminal, refined for **speed**, **aesthetics**, and **intelligence**.
 
-Powered by [Ollama](https://ollama.com) and **qwen3:8b**, Scorpion doesn't just chat—it takes action, manages your system, and researches the web for you **(for free, without API keys)**.
+Powered by [Ollama](https://ollama.com) and **qwen3.5:0.8b**, Scorpion doesn't just chat—it takes action, manages your system, and researches the web for you **(for free, without API keys)**.
 
 ```
   ███████╗ ██████╗ ██████╗ ██████╗ ██████╗ ██╗ ██████╗ ███╗   ██╗
@@ -31,11 +31,11 @@ Powered by [Ollama](https://ollama.com) and **qwen3:8b**, Scorpion doesn't just 
 
 ## Requirements
 
-- **Node.js** 18+
+- **Node.js** 22.12+
 - [Ollama](https://ollama.com/download) running locally
-- **qwen3:8b** model (recommended):
+- **qwen3.5:0.8b** model (recommended):
   ```bash
-  ollama pull qwen3:8b
+  ollama pull qwen3.5:0.8b
   ```
 
 ## Quick Start
@@ -53,9 +53,56 @@ Powered by [Ollama](https://ollama.com) and **qwen3:8b**, Scorpion doesn't just 
    ```
    *No API keys required! It works straight out of the box.*
 
+### Install from npm
+
+After the `0.1.0` release, Scorpion can be installed on Windows, macOS, and Linux:
+
+```bash
+# Global npm install
+npm install --global scorpion-cli
+scorpion
+
+# Run without installing globally
+npx scorpion-cli
+```
+
+PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-2/v0.1.0/install.ps1 | iex
+scorpion
+```
+
+macOS/Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-2/v0.1.0/install.sh | sh
+scorpion
+```
+
+The same scripts can be served from `https://aish.dawnlightlabs.com/install.ps1` and `/install.sh` once the custom domain is connected to the release files.
+
+Scorpion is distributed as one Node.js package rather than separate native binaries, so the same release works across all three platforms. Ollama must still be installed and running locally.
+
 ## 🎯 Usage & Power Commands
 
 Scorpion uses a natural language interface, but also supports powerful triggers for specific workflows:
+
+Inside the interactive session, slash commands control the session:
+
+```text
+/list                 List installed Ollama models
+/model                Interactively select an installed model
+/model <name>         Switch directly to a model
+/settings             Show the active model and settings
+/think on|off|toggle  Enable or disable visible thinking output
+/help                 Show all commands
+/clear                Clear conversation history
+/stats, /reports      Show session statistics or saved reports
+/export [md|json]     Export the last report
+/demo                 Show UI features
+/exit                 Quit Scorpion
+```
 
 ### **1. Deep Research Mode** (`@deep`)
 Triggers an in-depth analysis session. It searches multiple sources, reads simplified content, and compiles a structured report with citations.
@@ -86,11 +133,11 @@ Directly interact with your OS.
 Scorpion works with default settings, but you can configure it via environment variables if needed:
 
 - `OLLAMA_HOST`: Set if your Ollama instance is not on `localhost:11434`.
-- `OLLAMA_MODEL`: Override the default `qwen3:8b` model.
+- `OLLAMA_MODEL`: Override the default `qwen3.5:0.8b` model.
 
 ## Troubleshooting
 
-- **"Model not found"**: Run `ollama pull qwen3:8b` (or your preferred model) first.
+- **"Model not found"**: Run `ollama pull qwen3.5:0.8b` (or your preferred model) first.
 - **"Connection failed"**: Ensure Ollama is running (`ollama serve`).
 
 ## Built With

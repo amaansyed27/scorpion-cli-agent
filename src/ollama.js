@@ -6,7 +6,7 @@
 import { Ollama } from 'ollama';
 
 // Default configuration
-const DEFAULT_MODEL = 'qwen3:8b';
+const DEFAULT_MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:0.8b';
 const DEFAULT_HOST = 'http://localhost:11434';
 
 // Create the Ollama client
@@ -99,9 +99,11 @@ export async function listModels() {
  * @returns {Promise<boolean>} - True if available
  */
 export async function isModelAvailable(modelName = DEFAULT_MODEL) {
-  try {
-    const models = await listModels();
-    return models.some(m => m.name.startsWith(modelName.split(':')[0]));
+    try {
+        const models = await listModels();
+        return models.some((m) => m.name === modelName || (
+            !modelName.includes(':') && m.name.split(':')[0] === modelName
+        ));
   } catch (error) {
     return false;
   }
