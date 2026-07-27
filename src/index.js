@@ -19,7 +19,7 @@ import {
 } from './ui/formatter.js';
 
 // Package info
-const VERSION = '0.1.0';
+const VERSION = '0.1.1';
 const NAME = 'scorpion';
 
 // Setup CLI
@@ -27,7 +27,7 @@ program
     .name(NAME)
     .version(VERSION)
     .description('🦂 Scorpion - Agentic AI CLI powered by Ollama')
-    .option('-m, --model <model>', 'Ollama model to use', DEFAULT_MODEL)
+    .option('-m, --model <model>', 'Ollama model to use')
     .option('-q, --query <query>', 'Run a single query and exit')
     .option('--think', 'Show AI thinking process')
     .option('--check', 'Check Ollama connection and exit');
@@ -38,16 +38,18 @@ const options = program.opts();
 
 // Main entry point
 async function main() {
+    const selectedModel = options.model || DEFAULT_MODEL;
+
     // Handle --check flag
     if (options.check) {
         showInfo('Checking Ollama connection...');
         try {
-            const available = await isModelAvailable(options.model);
+            const available = await isModelAvailable(selectedModel);
             if (available) {
-                showSuccess(`Ollama is running. Model '${options.model}' is available.`);
+                showSuccess(`Ollama is running. Model '${selectedModel}' is available.`);
             } else {
-                showError(`Model '${options.model}' not found.`);
-                showInfo(`Run: ollama pull ${options.model}`);
+                showError(`Model '${selectedModel}' not found.`);
+                showInfo(`Run: ollama pull ${selectedModel}`);
             }
         } catch (error) {
             showError('Could not connect to Ollama.');

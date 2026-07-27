@@ -59,24 +59,24 @@ After the `0.1.0` release, Scorpion can be installed on Windows, macOS, and Linu
 
 ```bash
 # Global npm install
-npm install --global scorpion-cli
+npm install --global scorpion-cli@0.1.1
 scorpion
 
 # Run without installing globally
-npx scorpion-cli
+npx scorpion-cli@0.1.1
 ```
 
 PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.0/install.ps1 | iex
+irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.1/install.ps1 | iex
 scorpion
 ```
 
 macOS/Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.0/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.1/install.sh | sh
 scorpion
 ```
 
@@ -103,6 +103,8 @@ Inside the interactive session, slash commands control the session:
 /demo                 Show UI features
 /exit                 Quit Scorpion
 ```
+
+The model chosen through `/model` is saved locally and reused the next time Scorpion starts. Use `--model <name>` to override it for one launch.
 
 ### **1. Deep Research Mode** (`@deep`)
 Triggers an in-depth analysis session. It searches multiple sources, reads simplified content, and compiles a structured report with citations.

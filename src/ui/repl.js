@@ -6,6 +6,7 @@
 import readline from 'readline';
 import { runAgent } from '../agent.js';
 import { isModelAvailable, DEFAULT_MODEL } from '../ollama.js';
+import { getConfigPath, loadSettings, saveSettings } from '../config.js';
 import { setProgressCallback } from '../tools/deep-research.js';
 import { handleStats, handleListReports, handleDemo, handleExport, handleListModels, handleModelSelect } from '../commands.js';
 import {
@@ -31,11 +32,15 @@ import {
  */
 export async function startREPL(options = {}) {
     const {
-        model = DEFAULT_MODEL,
+        model,
         showThinkingOutput = false,  // Hidden by default like Claude Code
     } = options;
 
-    const settings = { model, showThinkingOutput };
+    const persistedSettings = await loadSettings();
+    const settings = {
+        model: model || persistedSettings.model || DEFAULT_MODEL,
+        showThinkingOutput,
+    };
 
     // Display welcome banner
     displayBanner();
@@ -182,7 +187,12 @@ async function handleCommand(command, settings, clearHistory, ask) {
             const selected = await handleModelSelect(settings.model, ask, command.args.join(' '));
             if (selected) {
                 settings.model = selected;
-                showSuccess(`Model changed to ${settings.model}`);
+                try {
+                    await saveSettings({ model: settings.model });
+                    showSuccess(`Model changed to ${settings.model} (saved)`);
+                } catch (error) {
+                    showError(`Model changed, but could not save it: ${error.message}`);
+                }
             }
             return true;
         }
@@ -232,6 +242,7 @@ function showSettings(settings) {
     console.log(`  Model: ${colors.accent(settings.model)}`);
     console.log(`  Thinking output: ${colors.accent(settings.showThinkingOutput ? 'on' : 'off')}`);
     console.log(`  Ollama host: ${colors.dim(process.env.OLLAMA_HOST || 'http://localhost:11434')}`);
+    console.log(`  Settings file: ${colors.dim(getConfigPath())}`);
     console.log();
 }
 
