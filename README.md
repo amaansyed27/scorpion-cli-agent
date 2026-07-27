@@ -80,7 +80,7 @@ curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1
 scorpion
 ```
 
-The same scripts can be served from `https://aish.dawnlightlabs.com/install.ps1` and `/install.sh` once the custom domain is connected to the release files.
+The current `https://aish.dawnlightlabs.com/install.ps1` endpoint belongs to AiSH and should not be used for Scorpion. Configure a separate Scorpion subdomain, such as `https://scorpion.dawnlightlabs.com/install.ps1`, to serve these installer files if you want a branded short URL.
 
 Scorpion is distributed as one Node.js package rather than separate native binaries, so the same release works across all three platforms. Ollama must still be installed and running locally.
 
