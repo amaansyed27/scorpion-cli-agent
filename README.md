@@ -69,14 +69,14 @@ npx scorpion-cli
 PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-2/v0.1.0/install.ps1 | iex
+irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.0/install.ps1 | iex
 scorpion
 ```
 
 macOS/Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-2/v0.1.0/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.0/install.sh | sh
 scorpion
 ```
 
