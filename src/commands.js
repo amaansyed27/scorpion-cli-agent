@@ -8,7 +8,6 @@ import { renderTable } from './ui/table.js';
 import { barChart } from './ui/charts.js';
 import { colors } from './ui/formatter.js';
 import { listModels } from './ollama.js';
-import inquirer from 'inquirer';
 
 /**
  * List models installed in the local Ollama instance.
@@ -44,11 +43,13 @@ export async function handleListModels(currentModel) {
 }
 
 /**
- * Select an installed Ollama model interactively.
+ * Select an installed Ollama model using the REPL's existing input stream.
  * @param {string} currentModel - Currently selected model
+ * @param {Function} ask - Function that prompts for one line of input
+ * @param {string} requestedModel - Optional model supplied with `/model <name>`
  * @returns {Promise<string|null>} Selected model, or null when cancelled/unavailable
  */
-export async function handleModelSelect(currentModel) {
+export async function handleModelSelect(currentModel, ask, requestedModel = '') {
     let models;
     try {
         models = await listModels();
@@ -62,23 +63,35 @@ export async function handleModelSelect(currentModel) {
         return null;
     }
 
-    try {
-        const answer = await inquirer.prompt([{
-            type: 'select',
-            name: 'model',
-            message: 'Select an Ollama model:',
-            choices: models.map((model) => ({
-                name: model.name === currentModel ? `${model.name} (active)` : model.name,
-                value: model.name,
-            })),
-            default: currentModel,
-        }]);
-
-        return answer.model;
-    } catch (error) {
-        if (error.name === 'ExitPromptError') return null;
-        throw error;
+    const requested = requestedModel.trim();
+    if (requested) {
+        const exactMatch = models.find((model) => model.name === requested);
+        if (exactMatch) return exactMatch.name;
+        console.log(colors.error(`  Model '${requested}' is not installed. Use /list to see available models.`));
+        return null;
     }
+
+    console.log();
+    console.log(colors.bold.white('  Select an Ollama Model'));
+    models.forEach((model, index) => {
+        const active = model.name === currentModel ? colors.success(' (active)') : '';
+        console.log(`  ${colors.dim(`${index + 1}.`)} ${model.name}${active}`);
+    });
+    console.log(colors.dim('  Enter a number, model name, or press Enter to cancel.'));
+
+    const answer = (await ask(colors.accent('  Select model: '))).trim();
+    if (!answer) return null;
+
+    const selectedIndex = Number.parseInt(answer, 10);
+    if (Number.isInteger(selectedIndex) && String(selectedIndex) === answer && models[selectedIndex - 1]) {
+        return models[selectedIndex - 1].name;
+    }
+
+    const exactMatch = models.find((model) => model.name === answer);
+    if (exactMatch) return exactMatch.name;
+
+    console.log(colors.error(`  '${answer}' is not a valid installed model.`));
+    return null;
 }
 
 function formatBytes(bytes = 0) {

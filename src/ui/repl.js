@@ -96,7 +96,7 @@ export async function startREPL(options = {}) {
             if (command) {
                 const shouldContinue = await handleCommand(command, settings, () => {
                     history = [];
-                });
+                }, (question) => new Promise((resolve) => rl.question(question, resolve)));
                 if (shouldContinue && !isClosing && !rl.closed) {
                     prompt();
                     return;
@@ -166,7 +166,7 @@ function parseCommand(input) {
     return name ? { name: name.toLowerCase(), args } : { name: 'help', args: [] };
 }
 
-async function handleCommand(command, settings, clearHistory) {
+async function handleCommand(command, settings, clearHistory, ask) {
     const arg = command.args[0]?.toLowerCase();
 
     switch (command.name) {
@@ -179,7 +179,7 @@ async function handleCommand(command, settings, clearHistory) {
             await handleListModels(settings.model);
             return true;
         case 'model': {
-            const selected = command.args.join(' ') || await handleModelSelect(settings.model);
+            const selected = await handleModelSelect(settings.model, ask, command.args.join(' '));
             if (selected) {
                 settings.model = selected;
                 showSuccess(`Model changed to ${settings.model}`);
