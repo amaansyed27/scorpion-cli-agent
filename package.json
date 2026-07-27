@@ -1,11 +1,12 @@
 {
     "name": "scorpion-cli",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Agentic AI CLI assistant powered by Ollama",
     "type": "module",
     "main": "src/index.js",
     "bin": {
-        "scorpion": "src/index.js"
+        "scorpion": "src/index.js",
+        "scorpion-cli": "src/index.js"
     },
     "files": [
         "src",

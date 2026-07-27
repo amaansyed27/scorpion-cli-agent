@@ -59,24 +59,24 @@ After the `0.1.0` release, Scorpion can be installed on Windows, macOS, and Linu
 
 ```bash
 # Global npm install
-npm install --global scorpion-cli@0.1.1
+npm install --global scorpion-cli@0.1.2
 scorpion
 
 # Run without installing globally
-npx scorpion-cli@0.1.1
+npx scorpion-cli@0.1.2
 ```
 
 PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.1/install.ps1 | iex
+irm https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.2/install.ps1 | iex
 scorpion
 ```
 
 macOS/Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.1/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/amaansyed27/scorpion-cli-agent/v0.1.2/install.sh | sh
 scorpion
 ```
 
